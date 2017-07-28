@@ -26,6 +26,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'custom_user',
+    'rest_framework',
+    'rest_framework_jwt',
+    'rest_framework_swagger',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -109,4 +113,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-AUTH_USER_MODEL = 'custom_user.EmailUser'
+AUTH_USER_MODEL = 'users.User'
