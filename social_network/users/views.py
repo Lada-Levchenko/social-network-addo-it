@@ -1,17 +1,19 @@
-from django.contrib.auth import login, authenticate
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.generics import UpdateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
+
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from .serializers import UserSerializer
+from .serializers import UserCreationSerializer, UserDetailSerializer
+from .models import User
 
 
-class AuthRegister(APIView):
+class UserCreateView(APIView):
     """
     Register a new user.
     """
-    serializer_class = UserSerializer
+    serializer_class = UserCreationSerializer
     permission_classes = (AllowAny,)
 
     def post(self, request, format=None):
@@ -22,38 +24,38 @@ class AuthRegister(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AuthLogin(APIView):
+class UserRetrieveView(RetrieveAPIView):
     """
-     Manual implementation of login method
+    Get a single user.
     """
-    def post(self, request, format=None):
-        data = request.data
-        email = data.get('email', None)
-        password = data.get('password', None)
-
-        account = authenticate(email=email, password=password)
-        # Generate token and add it to the response object
-        if account is not None:
-            login(request, account)
-            return Response({
-                'status': 'Successful',
-                'message': 'You have successfully been logged into your account.'
-            }, status=status.HTTP_200_OK)
-
-        return Response({
-            'status': 'Unauthorized',
-            'message': 'Username/password combination invalid.'
-        }, status=status.HTTP_401_UNAUTHORIZED)
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
+    permission_classes = (AllowAny, )
 
 
-class UserView(APIView):
-    permission_classes = (IsAuthenticated, )
-    authentication_classes = (JSONWebTokenAuthentication, )
+class UserUpdateView(UpdateAPIView):        # TODO: PATCHing instead of PUTting
+    """
+    Update an existing user.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
+    permission_classes = (AllowAny,)        # TODO: change to IsAuthenticated
 
-    def get(self, request):
-        data = {
-            'id': request.user.id,
-            'username': request.user.username,
-            'token': str(request.auth)
-        }
-        return Response(data)
+
+class UserDeleteView(DestroyAPIView):
+    """
+    Delete an existing user.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
+    permission_classes = (AllowAny,)        # TODO: change to IsOwner
+
+
+class UserListView(ListAPIView):
+    """
+    Get a list of all users.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
+    permission_classes = (AllowAny, )
+    # authentication_classes = (JSONWebTokenAuthentication, )

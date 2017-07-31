@@ -3,32 +3,27 @@ from rest_framework import serializers
 from .models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
     confirm_password = serializers.CharField(write_only=True, required=True)
+    date_of_birth = serializers.DateField()
+    avatar = serializers.URLField(allow_blank=True)
+    bio = serializers.CharField(max_length=None, min_length=None, allow_blank=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'username', 'first_name', 'last_name',
-                  'password', 'confirm_password')
+        fields = ('id', 'email', 'first_name', 'last_name', 'password', 'confirm_password',
+                  'date_of_birth', 'avatar', 'bio')
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.username = validated_data.get('username', instance.username)
-        instance.first_name = validated_data.get('first_name', instance.firstname)
-        instance.last_name = validated_data.get('last_name', instance.lastname)
-
         password = validated_data.get('password', None)
-        confirm_password = validated_data.get('confirm_password', None)
-
-        if password and password == confirm_password:
+        confirm_password = validated_data.pop('confirm_password', None)
+        if password and confirm_password and password == confirm_password:
+            instance = User.objects.create(**validated_data)
             instance.set_password(password)
+            instance.save()
 
-        instance.save()
-        return instance
+            return instance
 
     def validate(self, data):
         if data['password']:
@@ -37,3 +32,14 @@ class UserSerializer(serializers.ModelSerializer):
                     "The passwords have to be the same"
                 )
         return data
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    date_of_birth = serializers.DateField(allow_null=True)
+    avatar = serializers.URLField(allow_blank=True)
+    bio = serializers.CharField(max_length=None, min_length=None, allow_blank=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'first_name', 'last_name',
+                  'date_of_birth', 'avatar', 'bio')
