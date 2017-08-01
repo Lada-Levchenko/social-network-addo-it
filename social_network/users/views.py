@@ -1,12 +1,13 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.generics import UpdateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .serializers import UserCreationSerializer, UserDetailSerializer
 from .models import User
+from .permissions import IsAccountOwner, IsAccountOwnerOrAdmin
 
 
 class UserCreateView(APIView):
@@ -14,7 +15,7 @@ class UserCreateView(APIView):
     Register a new user.
     """
     serializer_class = UserCreationSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = [AllowAny]
 
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
@@ -30,16 +31,15 @@ class UserRetrieveView(RetrieveAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
-    permission_classes = (AllowAny, )
 
 
-class UserUpdateView(UpdateAPIView):        # TODO: PATCHing instead of PUTting
+class UserUpdateView(UpdateAPIView):
     """
     Update an existing user.
     """
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
-    permission_classes = (AllowAny,)        # TODO: change to IsAuthenticated
+    permission_classes = [IsAccountOwnerOrAdmin]
 
 
 class UserDeleteView(DestroyAPIView):
@@ -48,7 +48,7 @@ class UserDeleteView(DestroyAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
-    permission_classes = (AllowAny,)        # TODO: change to IsOwner
+    permission_classes = [IsAccountOwnerOrAdmin]
 
 
 class UserListView(ListAPIView):
@@ -57,5 +57,3 @@ class UserListView(ListAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
-    permission_classes = (AllowAny, )
-    # authentication_classes = (JSONWebTokenAuthentication, )
