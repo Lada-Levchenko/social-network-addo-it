@@ -1,4 +1,5 @@
 import requests
+from social_network_project.local_settings import HUNTER_API_KEY
 
 
 class EmailHunter:
@@ -25,3 +26,5 @@ class EmailHunter:
         params = {'email': email, 'api_key': self.api_key}
         endpoint = self.base_endpoint.format('email-verifier')
         return self._query_hunter(endpoint, params)
+
+email_hunter = EmailHunter(HUNTER_API_KEY)

@@ -1,20 +1,14 @@
 from rest_framework import serializers
 
 from .models import User
-from .hunter_service import EmailHunter
-from social_network_project.local_settings import HUNTER_API_KEY, CLEARBIT_API_KEY
-import clearbit
-
-email_hunter = EmailHunter(HUNTER_API_KEY)
-clearbit.key = CLEARBIT_API_KEY
-DEFAULT_AVATAR_URL = 'https://www.spinninrecords.com/images/img_profile80x80.png'
+from .hunter_service import email_hunter
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
     confirm_password = serializers.CharField(write_only=True, required=True)
     date_of_birth = serializers.DateField(required=False)
-    avatar = serializers.URLField(default=DEFAULT_AVATAR_URL, required=False)
+    avatar = serializers.URLField(required=False)
     bio = serializers.CharField(max_length=None, min_length=None, allow_blank=True, required=False)
 
     class Meta:
