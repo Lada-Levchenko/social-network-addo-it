@@ -24,5 +24,6 @@ schema_view = get_swagger_view(title='Social Network by Addo-UA API')
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-documentation/', schema_view),
-    url(r'^api/', include('users.urls')),
+    url(r'^api/users/', include('users.urls')),
+    url(r'^api/posts/', include('posts.urls')),
 ]

@@ -46,7 +46,6 @@ class UserCreationWithValidEmailSerializer(UserCreationSerializer):
         if data['email']:
             result_data = email_hunter.email_verifier(data['email'])
             # gmail, hotmail and other popular mail systems will be considered as "risky"!
-            print(result_data['result'])
             if result_data['result'] not in ['deliverable', 'risky']:
                 raise serializers.ValidationError(
                     "The email has to be real"
