@@ -71,7 +71,7 @@ class UserDeleteView(DestroyAPIView):
 
 class UserListView(ListAPIView):
     """
-    Get a list of all users.
+    Get a list of users by filters.
     """
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer

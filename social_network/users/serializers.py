@@ -54,11 +54,15 @@ class UserCreationWithValidEmailSerializer(UserCreationSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    date_of_birth = serializers.DateField(allow_null=True, required=False)
-    avatar = serializers.URLField(allow_blank=True, required=False)
-    bio = serializers.CharField(max_length=None, min_length=None, allow_blank=True, required=False)
 
     class Meta:
         model = User
         exclude = ('password',)
         read_only_fields = ('email',)
+
+
+class UserMiniSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'first_name', 'last_name', 'avatar')

@@ -7,4 +7,5 @@ Social Network uses following technologies for now:
   - Django REST Swagger
 * SQLite
 * Clearbit and Hunter.io
+
 Automated Bot: nothing yet
