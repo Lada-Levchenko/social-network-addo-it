@@ -1,14 +1,12 @@
 from django.db import models
 from custom_user.models import AbstractEmailUser
 
-DEFAULT_AVATAR_URL = 'https://www.spinninrecords.com/images/img_profile80x80.png'
-
 
 class User(AbstractEmailUser):
     first_name = models.CharField(blank=True, max_length=100)
     last_name = models.CharField(blank=True, max_length=100)
     date_of_birth = models.DateField(null=True)
-    avatar = models.CharField(max_length=500, default=DEFAULT_AVATAR_URL)
+    avatar = models.CharField(max_length=500)
     bio = models.TextField(blank=True)
     relationships = models.ManyToManyField('self', through='Relationship',
                                            symmetrical=False,

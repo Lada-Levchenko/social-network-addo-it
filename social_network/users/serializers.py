@@ -1,14 +1,21 @@
 from rest_framework import serializers
 
 from .models import User
+from .hunter_service import EmailHunter
+from social_network_project.local_settings import HUNTER_API_KEY, CLEARBIT_API_KEY
+import clearbit
+
+email_hunter = EmailHunter(HUNTER_API_KEY)
+clearbit.key = CLEARBIT_API_KEY
+DEFAULT_AVATAR_URL = 'https://www.spinninrecords.com/images/img_profile80x80.png'
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
     confirm_password = serializers.CharField(write_only=True, required=True)
-    date_of_birth = serializers.DateField()
-    avatar = serializers.URLField(allow_blank=True)
-    bio = serializers.CharField(max_length=None, min_length=None, allow_blank=True)
+    date_of_birth = serializers.DateField(required=False)
+    avatar = serializers.URLField(default=DEFAULT_AVATAR_URL, required=False)
+    bio = serializers.CharField(max_length=None, min_length=None, allow_blank=True, required=False)
 
     class Meta:
         model = User
@@ -30,6 +37,25 @@ class UserCreationSerializer(serializers.ModelSerializer):
             if data['password'] != data['confirm_password']:
                 raise serializers.ValidationError(
                     "The passwords have to be the same"
+                )
+        return data
+
+
+class UserCreationWithValidEmailSerializer(UserCreationSerializer):
+
+    def validate(self, data):
+        if data['password']:
+            if data['password'] != data['confirm_password']:
+                raise serializers.ValidationError(
+                    "The passwords have to be the same"
+                )
+        if data['email']:
+            result_data = email_hunter.email_verifier(data['email'])
+            # gmail, hotmail and other popular mail systems will be considered as "risky"!
+            print(result_data['result'])
+            if result_data['result'] not in ['deliverable', 'risky']:
+                raise serializers.ValidationError(
+                    "The email has to be real"
                 )
         return data
 

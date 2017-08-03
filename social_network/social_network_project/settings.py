@@ -1,3 +1,4 @@
+import datetime
 import os
 from . import local_settings
 
@@ -124,4 +125,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+}
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
 }

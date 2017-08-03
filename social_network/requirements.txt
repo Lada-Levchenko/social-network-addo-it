@@ -4,3 +4,4 @@ pytz==2017.2
 django-rest-swagger==2.1.2
 djangorestframework==3.6.3
 djangorestframework-jwt==1.11.0
+clearbit==0.1.6
