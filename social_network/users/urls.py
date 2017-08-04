@@ -11,8 +11,8 @@ urlpatterns = [
     url(r'^register/$', UserValidCreateView.as_view()),
     url(r'^register-invalid/$', UserInvalidCreateView.as_view()),
     url(r'^additional-data/$', UserAdditionalDataView.as_view()),
-    url(r'^get/(?P<pk>\d+)/$', UserRetrieveView.as_view()),
-    url(r'^update/(?P<pk>\d+)/$', UserUpdateView.as_view()),
+    url(r'^get/(?P<pk>\d+)/$', UserRetrieveView.as_view(), name='user-get'),
+    url(r'^update/(?P<pk>\d+)/$', UserUpdateView.as_view(), name='user-update'),
     url(r'^delete/(?P<pk>\d+)/$', UserDeleteView.as_view()),
     url(r'^list/', UserListView.as_view()),
 ]

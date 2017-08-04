@@ -4,7 +4,18 @@ from .models import User
 from .hunter_service import email_hunter
 
 
-class UserCreationSerializer(serializers.ModelSerializer):
+class UserDetailSerializer(serializers.ModelSerializer):
+
+    user_url = serializers.HyperlinkedIdentityField(view_name='user-get')
+    update_url = serializers.HyperlinkedIdentityField(view_name='user-update')
+
+    class Meta:
+        model = User
+        exclude = ('password',)
+        read_only_fields = ('email',)
+
+
+class UserCreationSerializer(UserDetailSerializer):
     password = serializers.CharField(write_only=True, required=True)
     confirm_password = serializers.CharField(write_only=True, required=True)
     date_of_birth = serializers.DateField(required=False)
@@ -51,14 +62,6 @@ class UserCreationWithValidEmailSerializer(UserCreationSerializer):
                     "The email has to be real"
                 )
         return data
-
-
-class UserDetailSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        exclude = ('password',)
-        read_only_fields = ('email',)
 
 
 class UserMiniSerializer(serializers.ModelSerializer):

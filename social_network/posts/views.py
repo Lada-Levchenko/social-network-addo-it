@@ -1,5 +1,6 @@
 from rest_framework.generics import CreateAPIView, UpdateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
-from .serializers import PostCreationSerializer, PostDetailSerializer
+
+from .serializers import PostCreationSerializer, PostDetailSerializer, LikePostSerializer, UnlikePostSerializer
 from .models import Post
 from .permissions import IsAccountOwner, IsAccountOwnerOrAdmin
 
@@ -45,3 +46,18 @@ class PostListView(ListAPIView):
     serializer_class = PostDetailSerializer
     filter_fields = ('author',)
 
+
+class LikePostView(UpdateAPIView):
+    """
+    Perform like as current user
+    """
+    queryset = Post.objects.all()
+    serializer_class = LikePostSerializer
+
+
+class UnlikePostView(UpdateAPIView):
+    """
+    Perform 'unlike' as current user
+    """
+    queryset = Post.objects.all()
+    serializer_class = UnlikePostSerializer
