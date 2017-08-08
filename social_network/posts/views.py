@@ -1,4 +1,7 @@
+from django.db.models import Count
 from rest_framework.generics import CreateAPIView, UpdateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
+from rest_framework.filters import DjangoFilterBackend
+from rest_framework.permissions import AllowAny
 
 from .serializers import PostCreationSerializer, PostDetailSerializer, LikePostSerializer, UnlikePostSerializer
 from .models import Post
@@ -42,9 +45,11 @@ class PostListView(ListAPIView):
     """
     Get a list of posts by author.
     """
-    queryset = Post.objects.all()
+    queryset = Post.objects.annotate(likes_count=Count('users_liked')).all()
     serializer_class = PostDetailSerializer
-    filter_fields = ('author',)
+    permission_classes = [AllowAny]
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('likes_count',)
 
 
 class LikePostView(UpdateAPIView):

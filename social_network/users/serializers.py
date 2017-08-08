@@ -6,8 +6,7 @@ from .hunter_service import email_hunter
 
 class UserDetailSerializer(serializers.ModelSerializer):
 
-    user_url = serializers.HyperlinkedIdentityField(view_name='user-get')
-    update_url = serializers.HyperlinkedIdentityField(view_name='user-update')
+    user_url = serializers.HyperlinkedIdentityField(view_name='user-detail')
     posts_count = serializers.ReadOnlyField(source='posts.count')
 
     class Meta:

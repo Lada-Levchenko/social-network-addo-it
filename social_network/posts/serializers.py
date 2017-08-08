@@ -12,7 +12,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     update_url = serializers.HyperlinkedIdentityField(view_name='post-update')
     like_url = serializers.HyperlinkedIdentityField(view_name='post-like')
     unlike_url = serializers.HyperlinkedIdentityField(view_name='post-unlike')
-    like_count = serializers.ReadOnlyField(source='users_liked.count')
+    likes_count = serializers.ReadOnlyField(source='users_liked.count')
 
     class Meta:
         model = Post
