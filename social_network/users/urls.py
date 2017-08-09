@@ -9,11 +9,11 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet)
 
 urlpatterns = [
+    url(r'^users/token-auth/', obtain_jwt_token, name='user-token-auth'),
+    url(r'^users/token-refresh/', refresh_jwt_token, name='user-token-refresh'),
+    url(r'^users/token-verify/', verify_jwt_token, name='user-token-verify'),       # don't know whether it's needed
+    url(r'^users/register/$', UserValidCreateView.as_view(), name='user-register'),
+    url(r'^users/register-invalid/$', UserInvalidCreateView.as_view(), name='user-register-invalid'),
+    url(r'^users/additional-data/$', UserAdditionalDataView.as_view(), name='user-additional-data'),
     url(r'^', include(router.urls)),
-    url(r'^token-auth/', obtain_jwt_token),
-    url(r'^token-refresh/', refresh_jwt_token),
-    url(r'^token-verify/', verify_jwt_token),       # don't know whether it's needed
-    url(r'^register/$', UserValidCreateView.as_view()),
-    url(r'^register-invalid/$', UserInvalidCreateView.as_view()),
-    url(r'^additional-data/$', UserAdditionalDataView.as_view()),
 ]

@@ -15,6 +15,10 @@ from .models import User
 from .permissions import IsAccountOwner, IsAccountOwnerOrAdminOrReadOnly, IsAccountOwnerOrAdminOrReadOnlyAuthenticated
 
 
+class MyDjangoFilterBackend(DjangoFilterBackend):
+    template = 'rest_framework/filters/django_filter.html'
+
+
 class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     """
     A ViewSet for listing, retrieving, updating and deleting users.
@@ -24,7 +28,8 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, DestroyM
         liked_posts_count=Count('liked_posts')
     ).all()
     serializer_class = UserDetailSerializer
-    filter_backends = (OrderingFilter, DjangoFilterBackend)
+    filter_backends = (OrderingFilter, MyDjangoFilterBackend)
+    filter_fields = ('first_name', 'last_name', 'is_active')
     ordering_fields = ('posts_count', 'liked_posts_count')
     permission_classes = [IsAccountOwnerOrAdminOrReadOnly]  # can be changed to IsAccountOwnerOrAdminOrReadOnlyAuthenticated
 

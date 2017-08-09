@@ -11,16 +11,14 @@ class PostDetailSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
     users_liked = UserMiniSerializer(read_only=True, many=True)
-    delete_url = serializers.HyperlinkedIdentityField(view_name='post-delete')
-    update_url = serializers.HyperlinkedIdentityField(view_name='post-update')
     like_url = serializers.HyperlinkedIdentityField(view_name='post-like')
     unlike_url = serializers.HyperlinkedIdentityField(view_name='post-unlike')
-    likes_count = serializers.ReadOnlyField(source='users_liked.count')
+    likes_count = serializers.ReadOnlyField()
 
     class Meta:
         model = Post
         fields = '__all__'
-        read_only_fields = ('publication_time', 'users_liked')
+        read_only_fields = ('publication_time',)
 
 
 class LikePostSerializer(PostDetailSerializer):

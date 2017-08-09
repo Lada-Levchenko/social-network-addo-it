@@ -10,7 +10,7 @@ router.register(r'posts', PostViewSet)
 
 
 urlpatterns = [
+    url(r'^posts/like/(?P<pk>\d+)/$', LikePostView.as_view(), name='post-like'),
+    url(r'^posts/unlike/(?P<pk>\d+)/$', UnlikePostView.as_view(), name='post-unlike'),
     url(r'^', include(router.urls)),
-    url(r'^like/(?P<pk>\d+)/$', LikePostView.as_view(), name='post-like'),
-    url(r'^unlike/(?P<pk>\d+)/$', UnlikePostView.as_view(), name='post-unlike'),
 ]
