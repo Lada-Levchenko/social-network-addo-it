@@ -2,17 +2,19 @@ from rest_framework import serializers
 
 from .models import User
 from .hunter_service import email_hunter
+from .clearbit_service import clearbit_enrichment
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
 
     user_url = serializers.HyperlinkedIdentityField(view_name='user-detail')
     posts_count = serializers.ReadOnlyField(source='posts.count')
+    liked_posts_count = serializers.ReadOnlyField(source='liked_posts.count')
 
     class Meta:
         model = User
         exclude = ('password',)
-        read_only_fields = ('email',)
+        read_only_fields = ('email', 'is_superuser', 'is_staff', 'date_joined', 'last_login')
 
 
 class UserCreationSerializer(UserDetailSerializer):
@@ -69,3 +71,35 @@ class UserMiniSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'avatar')
+
+
+class UserAdditionalDataSerializer(serializers.Serializer):
+
+    email = serializers.EmailField(required=True)
+    first_name = serializers.ReadOnlyField()
+    last_name = serializers.ReadOnlyField()
+    gender = serializers.ReadOnlyField()
+    location = serializers.ReadOnlyField()
+    bio = serializers.ReadOnlyField()
+    site = serializers.ReadOnlyField()
+    avatar = serializers.ReadOnlyField()
+
+    class Meta:
+        fields = '__all__'
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    def validate(self, data):
+        if data['email']:
+            additional_data = clearbit_enrichment(data['email'])
+            if additional_data:
+                data.update(additional_data)
+            else:
+                raise serializers.ValidationError(
+                    "The email has to be real"
+                )
+        return data

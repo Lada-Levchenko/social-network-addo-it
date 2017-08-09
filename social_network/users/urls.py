@@ -1,14 +1,12 @@
 from django.conf.urls import url
 from rest_framework.compat import include
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-from .views import UserValidCreateView, UserInvalidCreateView, UserAdditionalDataView, UserReadOnlyViewSet, \
-    UserUpdateDeleteViewSet
+from .views import UserValidCreateView, UserInvalidCreateView, UserAdditionalDataView, UserViewSet
 from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
-router.register(r'', UserReadOnlyViewSet, base_name='user')
-# router.register(r'', UserUpdateDeleteViewSet)
+router.register(r'users', UserViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
