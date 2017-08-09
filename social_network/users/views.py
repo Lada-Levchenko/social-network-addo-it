@@ -26,7 +26,7 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, DestroyM
     serializer_class = UserDetailSerializer
     filter_backends = (OrderingFilter, DjangoFilterBackend)
     ordering_fields = ('posts_count', 'liked_posts_count')
-permission_classes = [IsAccountOwnerOrAdminOrReadOnly]  # can be changed to IsAccountOwnerOrAdminOrReadOnlyAuthenticated
+    permission_classes = [IsAccountOwnerOrAdminOrReadOnly]  # can be changed to IsAccountOwnerOrAdminOrReadOnlyAuthenticated
 
 
 class UserValidCreateView(CreateAPIView):

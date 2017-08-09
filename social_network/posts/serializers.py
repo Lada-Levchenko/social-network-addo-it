@@ -6,7 +6,10 @@ from users.serializers import UserMiniSerializer
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
-    author = UserMiniSerializer(read_only=True)
+    author = serializers.PrimaryKeyRelatedField(
+        read_only=True,
+        default=serializers.CurrentUserDefault()
+    )
     users_liked = UserMiniSerializer(read_only=True, many=True)
     delete_url = serializers.HyperlinkedIdentityField(view_name='post-delete')
     update_url = serializers.HyperlinkedIdentityField(view_name='post-update')
@@ -18,13 +21,6 @@ class PostDetailSerializer(serializers.ModelSerializer):
         model = Post
         fields = '__all__'
         read_only_fields = ('publication_time', 'users_liked')
-
-
-class PostCreationSerializer(PostDetailSerializer):
-    author = serializers.PrimaryKeyRelatedField(
-        read_only=True,
-        default=serializers.CurrentUserDefault()
-    )
 
 
 class LikePostSerializer(PostDetailSerializer):
