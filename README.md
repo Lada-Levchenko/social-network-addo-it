@@ -11,3 +11,5 @@ Social Network uses following technologies for now:
 
 Automated Bot:
 * Requests
+* Names (third-party module for name-generation)
+* Part of "Little Prince" by Oscar Wilde for generation of posts

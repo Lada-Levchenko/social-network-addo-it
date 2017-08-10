@@ -125,7 +125,8 @@ class AutomatedBot(object):
                 if user['liked_posts_count'] == max_likes_per_user:
                     continue
                 self.perform_login({'email': user['email'], 'password': self.session_password})
-                for like in range(max_likes_per_user):   # iterating over likes for user
+                likes = user['liked_posts_count']
+                while likes < max_likes_per_user:   # iterating over likes for user
                     random_user_id = user['id']
                     while random_user_id == user['id']:     # trying to spot another appropriate user to like his post
                         posts_with_no_likes = self.get_posts_list({'likes_count': '0'})
@@ -142,8 +143,16 @@ class AutomatedBot(object):
                         extra_situation = False
                         break
                     posts_of_random_user = self.get_posts_list({'author': random_user_id})
+                    # check if random user has some posts not liked by current user
+                    if posts_of_random_user['count'] == sum(1 for post in posts_of_random_user['results']
+                                                            if user['id'] in [user['id'] for user in
+                                                                              post['users_liked']]):
+                        continue
                     random_post = random.choice(posts_of_random_user['results'])
+                    while user['id'] in [user['id'] for user in random_post['users_liked']]:
+                        random_post = random.choice(posts_of_random_user['results'])
                     self.like_post(random_post['id'])
+                    likes += 1
             if not users_list_page['next']:
                 break
             response = requests.get(users_list_page['next'], headers=self.headers)
