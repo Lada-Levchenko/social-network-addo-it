@@ -6,7 +6,7 @@ class Post(models.Model):
     text = models.TextField()
     publication_time = models.DateTimeField(auto_now_add=True)
     users_liked = models.ManyToManyField('users.User', related_name='liked_posts')
-    likes_count = models.IntegerField(default='users_liked.count')
+    likes_count = models.IntegerField(default=0)
 
     def liked_by(self, user_liked):
         if user_liked:
