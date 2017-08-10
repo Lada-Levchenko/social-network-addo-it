@@ -48,6 +48,10 @@ class AutomatedBot(object):
         response = requests.post(self.api_url + 'users/register/', json=combined_signup_data)
         return response.json()
 
+    def get_user(self, user_id):
+        response = requests.get(self.api_url + 'users/%s/' % user_id, headers=self.headers)
+        return response.json()
+
     def get_users_list(self, params=None):
         response = requests.get(self.api_url + 'users/', params=params, headers=self.headers)
         return response.json()
@@ -117,11 +121,11 @@ class AutomatedBot(object):
         extra_situation = False     # when only posts of current user are left with no likes
         while True:     # iterating over pages
             for user in users_list_page['results']:     # iterating over users on page
+                user = self.get_user(user['id'])    # refresh data on user
                 if user['liked_posts_count'] == max_likes_per_user:
                     continue
-                email = user['email']
-                self.perform_login({'email': email, 'password': self.session_password})
-                while user['liked_posts_count'] < max_likes_per_user:   # iterating over likes for user
+                self.perform_login({'email': user['email'], 'password': self.session_password})
+                for like in range(max_likes_per_user):   # iterating over likes for user
                     random_user_id = user['id']
                     while random_user_id == user['id']:     # trying to spot another appropriate user to like his post
                         posts_with_no_likes = self.get_posts_list({'likes_count': '0'})
