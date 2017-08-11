@@ -1,7 +1,7 @@
 import random
 
 import requests
-import automated_bot.config as config
+import config as config
 import json
 from datetime import datetime
 import names
