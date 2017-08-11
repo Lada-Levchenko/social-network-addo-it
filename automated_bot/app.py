@@ -14,7 +14,7 @@ class AutomatedBot(object):
         self.headers = None
         self.users_emails = []
         self.session_password = config.admin_password
-        file = open('sample.txt', 'r')
+        file = open('automated_bot/sample.txt', 'r')
         self.sample_text_words = file.readline().split()
         file.close()
 

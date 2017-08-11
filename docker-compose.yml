@@ -6,7 +6,7 @@ services:
     restart: always
     build: .
     volumes:
-      - .:/app/social_network
+      - .:/code
     ports:
       - "5000:5000"
 
@@ -23,7 +23,12 @@ services:
       max-file: "2"
 
   automated_bot:
+    restart: always
     build: .
-    command: python app.py
+    command: python automated_bot/app.py
     volumes:
-      - .:/data/automated_bot
+      - .:/code
+    depends_on:
+      - social_network
+    links:
+      - social_network
