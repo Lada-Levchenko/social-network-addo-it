@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+
+  social_network:
+    restart: always
+    build: .
+    volumes:
+      - .:/app/social_network
+    ports:
+      - "5000:5000"
+
+    entrypoint:
+      ./docker-entry-points/social-network.sh
+
+    environment:
+      RUN_TYPE: production
+
+    logging:
+     driver: "json-file"
+     options:
+      max-size: "25m"
+      max-file: "2"
+
+  automated_bot:
+    build: .
+    command: python app.py
+    volumes:
+      - .:/data/automated_bot
