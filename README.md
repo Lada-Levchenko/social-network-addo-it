@@ -1,6 +1,5 @@
 # social-network-addo-ua
 
-
 Social Network uses following technologies for now:
 * Django
   - Django REST Framework
