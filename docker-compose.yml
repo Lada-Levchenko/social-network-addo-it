@@ -23,12 +23,7 @@ services:
       max-file: "2"
 
   automated_bot:
-    restart: always
     build: .
     command: python automated_bot/app.py
     volumes:
       - .:/code
-    depends_on:
-      - social_network
-    links:
-      - social_network
